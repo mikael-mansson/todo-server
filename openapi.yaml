@@ -1,0 +1,147 @@
+openapi: 3.0.3
+info:
+  title: Todo API
+  description: |
+    API for adding, getting, changing todos
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001/api
+tags:
+  - name: todo
+    description: Element of your todo list
+paths:
+  /todos:
+    get:
+      tags:
+        - todo
+      summary: Get the list of todos
+      description: Get the list of todos
+      operationId: getTodos
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodoArray' 
+    post:
+      tags:
+        - todo
+      summary: Add a new todo to the list
+      description: Add a new todo to the list
+      operationId: addTodo
+      requestBody:
+        description: Create a new todo in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Text'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'          
+  /todos/{id}:
+    get:
+      tags:
+        - todo
+      summary: Get a todo by Id
+      description: Get a todo by Id
+      operationId: getTodo
+      parameters:
+        - name: id
+          in: path
+          description: Id of todo to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+    patch:
+      tags:
+        - todo
+      summary: Update an existing todo
+      description: Update an existing todo by Id
+      operationId: updateTodos
+      parameters:
+        - name: id
+          in: path
+          description: Id of todo to update
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existing todo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Todo'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+    delete:
+      tags:
+        - todo
+      summary: Delete an existing todo
+      description: Delete an existing todo by Id
+      operationId: deleteTodos
+      parameters:
+        - name: id
+          in: path
+          description: Id of todo to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+components:
+  schemas:
+    Todo:
+      required:
+        - id
+        - complete
+        - text
+      type: object
+      properties:
+        id:
+          type: string
+        complete:
+          type: boolean
+        text:
+          type: string
+    Text:
+      required:
+        - text
+      type: object
+      properties:
+        text:
+          type: string
+    TodoArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/Todo'
+  requestBodies:
+    Todo:
+      description: Todo object that needs to be added to the list
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Todo'
